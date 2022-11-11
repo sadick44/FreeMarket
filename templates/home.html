@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type='text/css' href="{% static 'css/home.css' %}">
+<link rel="stylesheet" type='text/css' href="{% static 'css/global.css' %}">
+{% endblock %}
+{% block content %}
+<div class="home mx-5 px-5 mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <form method="POST">
+                {% csrf_token %}
+                <p><input type="text" class="form-control mb-3 recherche" placeholder="Recherche">
+                    <input type="submit" class="btn btn-primary" value="Rechercher"></p>
+            </form>
+        </div>
+        <div class="col-md-4 mt-5">
+            <h1 class=" mb-3 introduction">Achetez, Vendez les biens que vous desirez!
+                Nous avons tous en stock pour vous.</h1>
+            <p>Si vous avez à vendre ou si vous recherchiez de quoi acheter, vous êtes au bon endroit. </p>
+
+            <div class="chat">
+                <a href="" class="btn btn-lg btn-success">Decouvrir</a>
+                <a href="compte" class="btn btn-lg btn-primary ml-4">Créer de compte</a>
+            </div>
+        </div>
+        <div class="col-md-4 mt-5">
+            <img src="{% static 'images/stock_1.jpg' %}" class="image_stocks"
+                 alt="vente en ligne voiture maison immobilier tchad">
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+
+    <div class="row">
+            <div class="col-md-3">
+                <h3>Top Categories</h3>
+                <div class="card" style="width: 18rem; background-color: #6cb6fe; color: #fff; border-radius: 10px">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Immobilier</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mt-5">
+                <div class="card" style="width: 18rem; background-color: #0ab194; color: #fff; border-radius: 10px">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Voitures</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the card's content.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

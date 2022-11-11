@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type='text/css' href="{% static 'css/global.css' %}">
+<link rel="stylesheet" type='text/css' href="{% static 'css/signup.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form_signup mx-5 my-5">
+                <h3 class="mb-1 mt-5">Bonjour! </h3>
+                <p>Créez un compte pour pouvoir beneficier de toutes les offres que FreeMarket vous fournisse</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ userform.as_p }}
+                    {{ form.as_p }}
+                    <input type="submit" class="btn btn-primary mb-3" value="soumettre">
+                    <p> Vous avez deja de compte? Clikez <a href="connexion">ici</a></p>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="avatar mt-5 mr-5">
+                <img src="{% static 'images/avatar.jpg' %}">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

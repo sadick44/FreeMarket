@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/global.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 mt-5">
+            <h4>Connectez-vous pour publier</h4>
+            <form method="POST">
+                {% csrf_token %}
+                <p><input type="email" name="username" placeholder="Email" class="form-control" required></p>
+                <p><input type="password" name="password" placeholder="Mot de passe" class="form-control" required></p>
+                <input type="submit" class="btn btn-primary">
+                <p>Vous n'avez pas de compte? Clikez <a href="compte">ici</a> </p>
+                <p>Vous avez oublié votre mot de passe, cliquez <a href="{% url 'password_reset' %}">ici</a></p>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <div class="avatar mt-5 mr-5">
+            <img src="{% static 'images/avatar.jpg' %}">
+        </div>
+    </div>
+</div>
+{% endblock %}
