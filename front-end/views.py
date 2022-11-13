@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -7,6 +8,7 @@ from django.contrib import messages
 from .forms import UserPhoneNumberForm
 from accounts.models import PhoneNumber
 from .forms import UserModelForm
+from accounts.models import MultipleImage
 
 
 def home(request):
@@ -48,9 +50,19 @@ def user_login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
+        #test = get_current_site(request)
 
         if user is not None:
             login(request, user)
             return HttpResponse('successfully logged in !!')
 
     return render(request, 'forms/login.html')
+
+
+def upload(request):
+    if request.method == "POST":
+        images = request.FILES.getlist('images')
+        for image in images:
+            MultipleImage.objects.create(images=image)
+    images = MultipleImage.objects.all()
+    return render(request, 'forms/multi-images.html', {'images': images})

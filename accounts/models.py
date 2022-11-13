@@ -16,3 +16,7 @@ from django.contrib.auth.models import User
 class PhoneNumber(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone_number = models.IntegerField(unique=True)
+
+
+class MultipleImage(models.Model):
+    images = models.FileField()
