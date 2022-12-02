@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block js_content %}
+<script src="{% static 'js/post/post_handler.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="col-md-2"></div>
+    <div class="col-md-6 mt-5">
+      <div class="form_post">
+        <form action="" method="POST">
+          <label for="name">Nom</label>
+          <input type="text" class="name" id="name" placeholder="Nom de votre article">
+
+          <label for="Price">Prix</label>
+          <input type="text" class="name" id="price" placeholder="Prix de votre article">
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

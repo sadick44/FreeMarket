@@ -12,8 +12,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form_signup mx-5 my-5">
-                <h3 class="mb-1 mt-5">Bonjour! </h3>
-                <p>Créez un compte pour pouvoir beneficier de toutes les offres que FreeMarket vous fournisse</p>
+                <h3 class="mb-1 mt-5 mb-5">Création de compte </h3>
                 <form method="POST">
                     {% csrf_token %}
                     {{ userform.as_p }}

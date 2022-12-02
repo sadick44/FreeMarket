@@ -5,10 +5,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from .forms import UserPhoneNumberForm
-from accounts.models import PhoneNumber
-from .forms import UserModelForm
-from accounts.models import MultipleImage
+from accounts.models import PhoneNumber, MultipleImage, Post
+from .forms import UserModelForm, PostForm, UserPhoneNumberForm
 
 
 def home(request):
@@ -27,7 +25,6 @@ def user_register(request):
 
             if User.objects.filter(username=form.cleaned_data['username']).exists():
                 messages(request, "<p>Vous avez deja un compte avec cet email </p>")
-
             elif form.cleaned_data['password1'] != form.cleaned_data['password2']:
                 messages(request, "<p> Les deux mots de passe ne sont pas identiques </p>")
 
@@ -66,3 +63,26 @@ def upload(request):
             MultipleImage.objects.create(images=image)
     images = MultipleImage.objects.all()
     return render(request, 'forms/multi-images.html', {'images': images})
+
+
+def post_form(request):
+    post = PostForm()
+    if request.method == 'POST':
+        post = PostForm(request.POST)
+        if post.is_valid():
+            post = Post.objects.create(
+                name=post.cleaned_data['name'],
+                user_post=request.user,
+                price=post.cleaned_data['price'],
+                description=post.cleaned_data['description'],
+                type=post.cleaned_data['type'] if post.cleaned_data['type'] != '' else None,
+                category=post.cleaned_data['category'] if post.cleaned_data['category'] != '' else None,
+                area=post.cleaned_data['area'],
+                city=post.cleaned_data['city']
+
+            )
+            post.save()
+
+            return HttpResponse('Vous réussi à poster votre poste')
+
+    return render(request, 'forms/post.html', {'post': post})

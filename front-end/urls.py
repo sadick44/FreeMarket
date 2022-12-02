@@ -10,6 +10,7 @@ urlpatterns = [
     path('compte', user_register, name="signup"),
     path('connexion', user_login, name='login'),
     path('checkimage', upload, name='multi-images' ),
+    path('create-post', post_form, name='post'),
 
     path("password_reset/", auth_views.PasswordResetView.as_view(), name='password_reset'),
     path("password_reset/done", auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),

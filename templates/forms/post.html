@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block js_content %}
+<script src="{% static 'js/post/post_handler.js' %}"></script>
+<script src="{% static 'js/post/selectChange.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-4">
+            <form method="'POST" class="mt-5" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="id_name">Titre:</label>
+                <input type="text" name="name" name="post" class="form-control" placeholder="Titre de votre annonce"
+                       required class="form-control-sm pr-4" style="width:100%" id="id_name">
+
+                <label for="id_price">Prix:</label>
+                <input type="text" name="price" name="post" class="form-control"
+                       required class="form-control-sm pr-4" style="width:100%" id="id_price">
+
+                <label for="id_area">Quartier:</label>
+                <input type="text" name="price" name="post" class="form-control"
+                       required class="form-control-sm pr-4" style="width:100%" id="id_area">
+
+                    <label for="id_city">Ville:</label>
+                    <input type="text" name="city" name="city" class="form-control"
+                           style="width:100%" required id="id_city"></p>
+
+                <p>
+                    <label for="id_category">Categorie:</label>
+                        <select name="category" id="id_category" class="form-control">
+                          <option value="Autre">Autre</option>
+                          <option value="Immobilier">Immobilier</option>
+                          <option value="Automobile">Automobile</option>
+                          <option value="Alimentation">Alimentation</option>
+                          <option value="Electroniques">Electroniques</option>
+                        </select>
+                </p>
+
+                     <label for="id_type_automobile">Type automobile:</label>
+                        <select name="type_automobile" id="id_type_automobile" class="form-control">
+                            <option value="Neuf">Neuf</option>
+                            <option value="Occassion">Ocassion</option>
+                            <option value="Ancien">Ancien</option>
+                        </select></p>
+                <p>
+                      <label for="id_type_immobilier">Type immobilier:</label>
+                        <select name="type_immobilier" id="id_type_immobilier" class="form-control">
+                          <option value="Maison">Maisson</option>
+                          <option value="Appartement">Appartement</option>
+                          <option value="Location">Location</option>
+                          <option value="Bureaux">Bureaux</option>
+                    </select></p>
+                <p>
+                    <label for="description">Description:</label>
+                    <textarea id="description" class="form-control" style="width:100%;"></textarea>
+                </p>
+
+                <input type="submit" class="btn btn-success" value="Poster">
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+
+{% endblock %}
+
+
+
