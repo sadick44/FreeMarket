@@ -17,6 +17,7 @@
                 $('#id_type_automobile').hide()
                  $('label[for=id_type_automobile').hide()
             }
+
             else if (value ==='Automobile')
             {
                 $('#id_type_automobile').show()
@@ -35,7 +36,3 @@
             }
         });
     })
-
-
-
-
