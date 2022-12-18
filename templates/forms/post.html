@@ -4,12 +4,22 @@
 {% block js_content %}
 <script src="{% static 'js/post/post_handler.js' %}"></script>
 <script src="{% static 'js/post/selectChange.js' %}"></script>
-
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <form action="" method="POST" class="mt-4" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ post.as_p }}
+                <input type="submit" class="btn btn-success">
+            </form>
+        </div>
+    </div>
+
+   <!-- <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-4">
             <form method="'POST" class="mt-5" enctype="multipart/form-data">
@@ -65,6 +75,7 @@
             </form>
         </div>
     </div>
+    -->
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>

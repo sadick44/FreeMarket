@@ -29,3 +29,7 @@ h1{
 .card{
     background-color: blue;
 }
+
+html{
+    border-radius: 20px;
+}

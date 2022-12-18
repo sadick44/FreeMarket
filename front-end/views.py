@@ -1,12 +1,13 @@
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from accounts.models import PhoneNumber, MultipleImage, Post
-from .forms import UserModelForm, PostForm, UserPhoneNumberForm
+from accounts.models import PhoneNumber, Post
+from .forms import  PostForm, UserPhoneNumberForm, UserForm
 
 
 def home(request):
@@ -14,25 +15,28 @@ def home(request):
 
 
 def user_register(request):
-    form = UserModelForm()
+    form = UserForm()
     userform = UserPhoneNumberForm()
+    User = get_user_model()
 
     if request.method == 'POST':
-        form = UserModelForm(request.POST)
+        form = UserForm(request.POST)
         userform = UserPhoneNumberForm(request.POST)
 
         if form.is_valid() and userform.is_valid():
 
-            if User.objects.filter(username=form.cleaned_data['username']).exists():
+            if User.objects.filter(email=form.cleaned_data['email']).exists():
                 messages(request, "<p>Vous avez deja un compte avec cet email </p>")
             elif form.cleaned_data['password1'] != form.cleaned_data['password2']:
                 messages(request, "<p> Les deux mots de passe ne sont pas identiques </p>")
 
             else:
-                user = User.objects.create_user(username=form.cleaned_data['username'], first_name=form.cleaned_data['first_name'],
-                                                last_name=form.cleaned_data['last_name'], password=form.cleaned_data['password1'])
+                user = User.objects.create_user(email=form.cleaned_data['email'],
+                                                        first_name=form.cleaned_data['first_name'],
+                                                last_name=form.cleaned_data['last_name'],
+                                                        password=form.cleaned_data['password1'])
                 user.save()
-                current_user_id = User.objects.get(username=form.cleaned_data['username']).id
+                current_user_id = User.objects.get(email=form.cleaned_data['email']).id
                 phone_number_user = PhoneNumber.objects.create(user_id=current_user_id,
                                                                phone_number=userform.cleaned_data['phone_number'])
                 phone_number_user.save()
@@ -46,43 +50,48 @@ def user_login(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
+
+        if '@' not in username:
+            phone = PhoneNumber.objects.filter(phone_number=username)
+            if phone:
+                username = phone.user.username
+
+        user = authenticate(request, email=username, password=password)
         #test = get_current_site(request)
 
         if user is not None:
             login(request, user)
             return HttpResponse('successfully logged in !!')
 
+        else:
+            return HttpResponse("<p> Vous n'avez pas encore de compte ou"
+                                " vos identifiants ne sont pas corrects ")
+
     return render(request, 'forms/login.html')
 
-
-def upload(request):
-    if request.method == "POST":
-        images = request.FILES.getlist('images')
-        for image in images:
-            MultipleImage.objects.create(images=image)
-    images = MultipleImage.objects.all()
-    return render(request, 'forms/multi-images.html', {'images': images})
-
-
+@login_required(login_url='/connexion')
 def post_form(request):
+    User = get_user_model()
     post = PostForm()
     if request.method == 'POST':
-        post = PostForm(request.POST)
-        if post.is_valid():
-            post = Post.objects.create(
+        post = PostForm(request.POST, request.FILES)
+
+        if post.is_valid() and User.objects.filter(email=request.user).exists():
+            user = User.objects.get(email=request.user)
+            post = Post(
                 name=post.cleaned_data['name'],
-                user_post=request.user,
+                user_id=user.id,
                 price=post.cleaned_data['price'],
                 description=post.cleaned_data['description'],
-                type=post.cleaned_data['type'] if post.cleaned_data['type'] != '' else None,
-                category=post.cleaned_data['category'] if post.cleaned_data['category'] != '' else None,
+                type_immobilier=post.cleaned_data['type_immobilier'] if post.cleaned_data['type_immobilier'] != '' else None,
+                type_automobile=post.cleaned_data['type_automobile'] if post.cleaned_data['type_automobile'] != '' else None,
+                category=post.cleaned_data['category'],
                 area=post.cleaned_data['area'],
-                city=post.cleaned_data['city']
-
+                city=post.cleaned_data['city'],
+                image=post.cleaned_data['image']
             )
             post.save()
 
-            return HttpResponse('Vous réussi à poster votre poste')
+            return HttpResponse('Vous avez réussi à poster votre poste')
 
     return render(request, 'forms/post.html', {'post': post})
