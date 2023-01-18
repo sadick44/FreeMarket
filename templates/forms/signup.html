@@ -15,8 +15,20 @@
                 <h3 class="mb-1 mt-5 mb-5">Création de compte </h3>
                 <form method="POST">
                     {% csrf_token %}
+
+                    {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                                    {{ message}}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
                     {{ userform.as_p }}
                     {{ form.as_p }}
+
                     <input type="submit" class="btn btn-primary mb-3" value="soumettre">
                     <p> Vous avez deja de compte? Clikez <a href="connexion">ici</a></p>
                 </form>

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.utils import timezone
 
 
+
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
 
@@ -54,7 +55,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = [] # needed later when wanna monetize it
 
     objects = UserManager()
 
@@ -89,6 +90,3 @@ class Post(models.Model):
 class PhoneNumber(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     phone_number = models.IntegerField(unique=True)
-
-    def __str__(self):
-        return self.phone_number

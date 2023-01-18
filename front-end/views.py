@@ -1,10 +1,9 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
-from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 
 from accounts.models import PhoneNumber, Post
 from .forms import  PostForm, UserPhoneNumberForm, UserForm
@@ -26,9 +25,12 @@ def user_register(request):
         if form.is_valid() and userform.is_valid():
 
             if User.objects.filter(email=form.cleaned_data['email']).exists():
-                messages(request, "<p>Vous avez deja un compte avec cet email </p>")
+                messages.add_message(request, messages.warning,
+                                     "<p>Vous avez deja un compte avec cet email </p>")
+
             elif form.cleaned_data['password1'] != form.cleaned_data['password2']:
-                messages(request, "<p> Les deux mots de passe ne sont pas identiques </p>")
+                messages.add_message(request,messages.warning,
+                                     "<p> Les deux mots de passe ne sont pas identiques </p>")
 
             else:
                 user = User.objects.create_user(email=form.cleaned_data['email'],
@@ -54,18 +56,19 @@ def user_login(request):
         if '@' not in username:
             phone = PhoneNumber.objects.filter(phone_number=username)
             if phone:
-                username = phone.user.username
-
+                user = PhoneNumber.objects.get(phone_number=username).user
+                username = user.email
         user = authenticate(request, email=username, password=password)
         #test = get_current_site(request)
 
         if user is not None:
             login(request, user)
-            return HttpResponse('successfully logged in !!')
+            return redirect(request.GET.get('next', '/')) # redirect the user to home after login or the
+                                                          # to previous page where login is required
 
         else:
-            return HttpResponse("<p> Vous n'avez pas encore de compte ou"
-                                " vos identifiants ne sont pas corrects ")
+            messages.warning(request, "Votre identifiant ou mot de passe n'est pas correct.")
+            return render(request, 'forms/login.html')
 
     return render(request, 'forms/login.html')
 
@@ -83,8 +86,12 @@ def post_form(request):
                 user_id=user.id,
                 price=post.cleaned_data['price'],
                 description=post.cleaned_data['description'],
-                type_immobilier=post.cleaned_data['type_immobilier'] if post.cleaned_data['type_immobilier'] != '' else None,
-                type_automobile=post.cleaned_data['type_automobile'] if post.cleaned_data['type_automobile'] != '' else None,
+                type_immobilier=post.cleaned_data['type_immobilier'] if
+                            post.cleaned_data['type_immobilier'] != '' else None,
+
+                type_automobile=post.cleaned_data['type_automobile'] if
+                            post.cleaned_data['type_automobile'] != '' else None,
+
                 category=post.cleaned_data['category'],
                 area=post.cleaned_data['area'],
                 city=post.cleaned_data['city'],
@@ -95,3 +102,27 @@ def post_form(request):
             return HttpResponse('Vous avez réussi à poster votre poste')
 
     return render(request, 'forms/post.html', {'post': post})
+
+
+login_required(login_url="/connexion")
+def user_profile(request):
+    pass
+
+def post_display(request):
+    posts = Post.objects.all()
+    return render(request, 'post.html', {'posts': posts})
+
+def single_post(request, pk):
+    User = get_user_model()
+    post = Post.objects.get(id=pk)
+    user = post.user
+    user = User.objects.get(email=user)
+    first_name = user.first_name
+    last_name = user.last_name
+    return render(request, 'internal/productView.html', {'post': post, 'first_name': first_name,
+                                                         'last_name': last_name})
+
+@login_required(login_url='/connexion')
+def user_logout(request):
+    logout(request)
+    return redirect('/')

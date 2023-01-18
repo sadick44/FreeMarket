@@ -1,0 +1,27 @@
+{% extends 'internal/navbar.html' %}
+
+{% block content %}
+  <div class="container">
+
+      <div class="row">
+          <div class="col-md-6">
+              <div class="card mt-5" style="width: 18rem;">
+                  <img class="card-img-top" src="{{ post.image.url }}" alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ post.name }}</h5>
+                    <h5 class="card-title">{{ post.price }} francs</h5>
+                      <p>categorie: {{ post.category }}</p>
+                    <p class="card-text">{{ post.description }}</p>
+                  </div>
+                </div>
+          </div>
+          <div class="col-md-6 mt-5">
+              <div class="simple_card">
+                   {{ first_name }} {{ last_name }}
+                    <button class="btn btn-primary">Ajouter aux favoris</button>
+                    <button class="btn btn-primary">Voir le numero</button>
+              </div>
+          </div>
+      </div>
+  </div>
+{% endblock %}
