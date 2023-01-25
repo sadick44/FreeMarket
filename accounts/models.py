@@ -76,15 +76,18 @@ class Post(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
     description = models.CharField(max_length=10000)
     category = models.CharField(choices=CATEGORIES, max_length=80, blank=True, null=True)
-   # image = models.ImageField(upload_to='files')
     type_immobilier = models.CharField(choices=TYPES_IMMOBILIER, max_length=50, blank=True, null=True)
     type_automobile = models.CharField(choices=TYPES_AUTOMOBILE, max_length=50, blank=True, null=True)
     area = models.CharField(max_length=60)
     city = models.CharField(max_length=60)
-    image = models.ImageField(upload_to="images/")
 
     def __str__(self):
         return self.name
+
+
+class Image(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    images = models.ImageField(upload_to="images/")
 
 
 class PhoneNumber(models.Model):

@@ -14,6 +14,7 @@
             <form action="" method="POST" class="mt-4" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ post.as_p }}
+                    {{ imageform.as_p }}
                 <input type="submit" class="btn btn-success">
             </form>
         </div>

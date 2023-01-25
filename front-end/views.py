@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 
-from accounts.models import PhoneNumber, Post
-from .forms import  PostForm, UserPhoneNumberForm, UserForm
+from accounts.models import PhoneNumber, Post, Image
+from .forms import  PostForm, UserPhoneNumberForm, UserForm, ImageForm
 
 
 def home(request):
@@ -76,32 +76,25 @@ def user_login(request):
 def post_form(request):
     User = get_user_model()
     post = PostForm()
+    imageform = ImageForm()
+
     if request.method == 'POST':
         post = PostForm(request.POST, request.FILES)
+        files = request.FILES.getlist('images')
 
         if post.is_valid() and User.objects.filter(email=request.user).exists():
             user = User.objects.get(email=request.user)
-            post = Post(
-                name=post.cleaned_data['name'],
-                user_id=user.id,
-                price=post.cleaned_data['price'],
-                description=post.cleaned_data['description'],
-                type_immobilier=post.cleaned_data['type_immobilier'] if
-                            post.cleaned_data['type_immobilier'] != '' else None,
 
-                type_automobile=post.cleaned_data['type_automobile'] if
-                            post.cleaned_data['type_automobile'] != '' else None,
-
-                category=post.cleaned_data['category'],
-                area=post.cleaned_data['area'],
-                city=post.cleaned_data['city'],
-                image=post.cleaned_data['image']
-            )
+            post = post.save(commit=False)
+            post.user = user
             post.save()
+
+            for file in files:
+                Image.objects.create(post=post, images=file)
 
             return HttpResponse('Vous avez réussi à poster votre poste')
 
-    return render(request, 'forms/post.html', {'post': post})
+    return render(request, 'forms/post.html', {'post': post, 'imageform': imageform})
 
 
 login_required(login_url="/connexion")
@@ -115,12 +108,17 @@ def post_display(request):
 def single_post(request, pk):
     User = get_user_model()
     post = Post.objects.get(id=pk)
+    images = Image.objects.filter(post=post)
     user = post.user
     user = User.objects.get(email=user)
     first_name = user.first_name
     last_name = user.last_name
+    phone_number = PhoneNumber.objects.get(user=user)
+    phone_number = phone_number.phone_number
+
     return render(request, 'internal/productView.html', {'post': post, 'first_name': first_name,
-                                                         'last_name': last_name})
+                                                         'last_name': last_name, 'images': images,
+                                                         'phone_number': phone_number})
 
 @login_required(login_url='/connexion')
 def user_logout(request):

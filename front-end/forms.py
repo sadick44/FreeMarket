@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from accounts.models import PhoneNumber, Post
+from accounts.models import PhoneNumber, Post, Image
 from accounts.constants.constants import *
 
 from accounts.models import User
@@ -34,7 +34,8 @@ class UserForm(UserCreationForm):
 
 class UserPhoneNumberForm(forms.ModelForm):
     phone_number = forms.IntegerField(widget=forms.NumberInput(
-        attrs={"class": "form-control", "name": "phone_number", "placeholder": "Numero de téléphone"}), label='Numéro de téléphone')
+        attrs={"class": "form-control", "name": "phone_number",
+               "placeholder": "Numero de téléphone"}), label='Numéro de téléphone')
 
     class Meta:
         model = PhoneNumber
@@ -71,10 +72,15 @@ class PostForm(forms.ModelForm):
     city = forms.CharField(widget=forms.TextInput(
         attrs={'name': 'city', "class": "form-control", 'style': 'width:100%','required': True}), label='Ville')
 
-    image = forms.ImageField(widget=forms.FileInput(
-        attrs={"class": "form-control ", "name": "images"}
-    ), label="Choisir image(s)")
     class Meta:
         model = Post
         fields = ['name', 'price', 'area', 'category', 'city',
-                  'type_automobile','type_immobilier', 'description', 'image']
+                  'type_automobile','type_immobilier', 'description']
+
+class ImageForm(forms.ModelForm):
+    images = forms.ImageField(
+        label="images",
+        widget=forms.FileInput(attrs={"multiple": True, "name": "images", "class": "form-control"}))
+    class Meta:
+        model = Image
+        fields = ["images"]
