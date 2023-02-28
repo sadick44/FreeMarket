@@ -1,12 +1,15 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from accounts.models import PhoneNumber, Post, Image
+from accounts.models import PhoneNumber, Post, Image, UserSearch
 from accounts.constants.constants import *
 
 from accounts.models import User
 
 
 class UserForm(UserCreationForm):
+    error_messages = {
+        'password_mismatch': "Les deux mots de passe ne sont pas identiques",
+    }
 
     first_name = forms.CharField(widget=forms.TextInput(
         attrs={"class":"form-control", "name":"first_name"}
@@ -47,7 +50,8 @@ class PostForm(forms.ModelForm):
     name = forms.CharField(
         widget=forms.TextInput(attrs={"name": "post",
     "placeholder": 'Titre de votre article', 'required': True,
-                                      "class": "form-control pr-4", 'style': 'width:100%'}), label='Titre de votre annonce')
+                                      "class": "form-control pr-4", 'style': 'width:100%'}),
+        label='Titre de votre annonce')
 
     price = forms.CharField(widget=forms.NumberInput(attrs={
         "name": "price", "help": "prix",

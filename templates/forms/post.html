@@ -10,7 +10,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-2"></div>
-        <div class="col-md-4">
+        <div class="col-md-4 mt-5">
+            <h4 class="mt-5">Créez votre annonce</h4>
             <form action="" method="POST" class="mt-4" enctype="multipart/form-data">
                     {% csrf_token %}
                     {{ post.as_p }}

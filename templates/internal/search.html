@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css_content %}
+<link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid mx-5 mt-5" style="background-color: white;">
+        <div class="row mt-5">
+            {% for result in results %}
+                <div class="col-6 col-md-6 mt-5">
+                    <div class="row" style="border:2px solid #e1f2e6; border-radius:20px">
+                            <div class="col-12 col-md-4 mx-0">
+                            <div class="image_place">
+                                <img src="{{ result.images.url}}" class="rounded mx-1" width="100%">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-8 mx-0">
+                            <a href="{% url 'single_post' result.post.id %}">
+                                <h5>{{ result.post.name }}</h5>
+                                <h5>{{ result.post.price }}</h5>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

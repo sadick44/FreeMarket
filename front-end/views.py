@@ -5,18 +5,37 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 
-from accounts.models import PhoneNumber, Post, Image
+from accounts.models import PhoneNumber, Post, Image, UserSearch
 from .forms import  PostForm, UserPhoneNumberForm, UserForm, ImageForm
 
+User = get_user_model()
 
 def home(request):
+    if request.method == 'POST':
+        word_searched = request.POST["word"]
+        user = request.user if request.user is authenticate else None
+        user_input = UserSearch.objects.create(word_entered=word_searched, user=user)
+        user_input.save()
+
+        results = Image.objects.filter(post__name__icontains=word_searched)\
+            .filter(post__description__icontains=word_searched).distinct('id')[::2]
+
+        # results = Post.objects.filter(name__icontains=word_searched).order_by('-created_date')\
+        #                     .values('image__images', 'name', 'price')[::2]
+
+        return render(request, 'internal/search.html', {'results': results})
     return render(request, 'home.html')
 
+
+def getPostById(id):
+    return Post.objects.get(id=id)
+
+def getUserByEmail(email):
+    return User.objects.get(email=email)
 
 def user_register(request):
     form = UserForm()
     userform = UserPhoneNumberForm()
-    User = get_user_model()
 
     if request.method == 'POST':
         form = UserForm(request.POST)
@@ -25,12 +44,10 @@ def user_register(request):
         if form.is_valid() and userform.is_valid():
 
             if User.objects.filter(email=form.cleaned_data['email']).exists():
-                messages.add_message(request, messages.warning,
-                                     "<p>Vous avez deja un compte avec cet email </p>")
+                messages.warning(request, "Vous avez deja un compte avec cet email")
 
             elif form.cleaned_data['password1'] != form.cleaned_data['password2']:
-                messages.add_message(request,messages.warning,
-                                     "<p> Les deux mots de passe ne sont pas identiques </p>")
+                messages.warning(request, "Les deux mots de passe ne sont pas identiques")
 
             else:
                 user = User.objects.create_user(email=form.cleaned_data['email'],
@@ -43,7 +60,7 @@ def user_register(request):
                                                                phone_number=userform.cleaned_data['phone_number'])
                 phone_number_user.save()
 
-                return redirect('/')
+                return redirect(request.GET.get('next', '/'))
 
     return render(request, 'forms/signup.html', {'form': form, 'userform': userform})
 
@@ -53,7 +70,9 @@ def user_login(request):
         username = request.POST['username']
         password = request.POST['password']
 
-        if '@' not in username:
+        if '@' not in username and not  username.isnumeric():
+            messages.warning(request, "Entrez votre mail ou numero de téléphone")
+            return render(request, 'forms/login.html')
             phone = PhoneNumber.objects.filter(phone_number=username)
             if phone:
                 user = PhoneNumber.objects.get(phone_number=username).user
@@ -68,13 +87,11 @@ def user_login(request):
 
         else:
             messages.warning(request, "Votre identifiant ou mot de passe n'est pas correct.")
-            return render(request, 'forms/login.html')
 
     return render(request, 'forms/login.html')
 
 @login_required(login_url='/connexion')
 def post_form(request):
-    User = get_user_model()
     post = PostForm()
     imageform = ImageForm()
 
@@ -106,11 +123,11 @@ def post_display(request):
     return render(request, 'post.html', {'posts': posts})
 
 def single_post(request, pk):
-    User = get_user_model()
-    post = Post.objects.get(id=pk)
+
+    post = getPostById(id=pk)
     images = Image.objects.filter(post=post)
     user = post.user
-    user = User.objects.get(email=user)
+    user = getUserByEmail(user)
     first_name = user.first_name
     last_name = user.last_name
     phone_number = PhoneNumber.objects.get(user=user)
@@ -124,3 +141,25 @@ def single_post(request, pk):
 def user_logout(request):
     logout(request)
     return redirect('/')
+
+# @login_required(login_url='/connexion')
+# def add_to_favorite(request, pk):
+#     post = getPostById(id=pk)
+#     user = getUserByEmail(email=request.user)
+#
+#     if not FavoritePost.objects.filter(post=post).exists():
+#         add_favorite = FavoritePost.objects.create(post=post, user=user)
+#         add_favorite.save()
+#
+#     myFavoritesPosts = FavoritePost.objects.filter(user=user)
+#       hunter.io
+        # phonebook.cz
+        # recrutement@acxa-juridica.com
+#     return render(request, 'internal/favorites.html',
+#                   {
+#                       'post': post, 'myFavoritesPosts': myFavoritesPosts
+#                   })
+
+def user_search(request):
+
+    return render(request, 'home.html')

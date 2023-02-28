@@ -1,35 +1,6 @@
-    body{
-    background-color: #F3F3F4;
-}
-h1{
-    font-family: bold
-}
-.image_stocks{
-    border-radius: 10px;
+.announcement{
 }
 
-@media (max-width: 480px) {
-    .btn-primary
-{
-    margin-left: 0px !important;
-    margin-top: 10px
-}
-    .recherche{
-        width: 180px;
-    }
-}
-
-@media (min-width: 780px){
-    .recherche{
-        width: 600px;
-    }
-}
-
-}
-.card{
-    background-color: blue;
-}
-
-html{
-    border-radius: 20px;
+.navbar-nav a, .navbar a{
+    color: white !important;
 }
