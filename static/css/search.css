@@ -1,3 +1,9 @@
 body{
     background-color: #dcdfe3;
 }
+
+.search{
+    position: absolute;
+    margin-top: 100px;
+    margin-right: 200px;
+}

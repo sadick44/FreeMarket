@@ -23,7 +23,8 @@ def home(request):
         # results = Post.objects.filter(name__icontains=word_searched).order_by('-created_date')\
         #                     .values('image__images', 'name', 'price')[::2]
 
-        return render(request, 'internal/search.html', {'results': results})
+        return render(request, 'internal/search.html', {'results': results,
+                                                        'data_length': len(results), 'word_searched': word_searched})
     return render(request, 'home.html')
 
 
