@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block js_content %}
+    <script src="{% static 'js/post/image_handler.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+
+        <div class="col-md-6 mt-5">
+        <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner">
+              {% for image in images %}
+
+              {% if forloop.first %}
+              <div class="carousel-item active">
+                  <img class="d-block w-100" src="{{ image.images.url}}" id="main_image" alt="First slide">
+                </div>
+              {% endif %}
+                <div class="carousel-item ">
+                  <img class="d-block w-100" src="{{ image.images.url}}" alt="First slide">
+                </div>
+              {% endfor %}
+          </div>
+        </div>
+            <div class="row">
+               {% for image in images %}
+                    <div class="col-3 col-md-3 mt-3">
+                        <img src="{{ image.images.url }}" class="small_image" width="100" alt="">
+                    </div>
+                {% endfor %}
+           </div>
+            <h3 class="mt-4">{{ post.name|title }}</h3>
+            <p>{{ post.description }}</p>
+      </div>
+
+        <div class="col-md-6 mt-5">
+            <ul class="list-group">
+                <li class="list-group-item active">Details du vendeur</li>
+                <li class="list-group-item">Nom: {{ first_name|title }} {{ last_name|title }}</li>
+                <li class="list-group-item">Quartier: {{ post.area }}</li>
+                <li class="list-group-item">Date de publ: {{ post.created_date }}</li>
+            </ul>
+            <a href="" class="btn btn-primary mt-4">Ajouter aux favoris</a>
+            <a href="" class="btn btn-primary mt-4" id="phone_number">{{ phone_number }}</a>
+
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+         $('#phone_number').click(function(){
+        $('#phone_number').html({{ phone_number }});
+    });
+    });
+</script>
+
+
+{% endblock %}

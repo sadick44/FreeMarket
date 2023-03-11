@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-3">
+       <div class="row">
+           {% for post in posts %}
+                <div class="col-md-4 mt-5">
+                    <div class="card" style="width: 18rem;">
+                      <img class="card-img-top" src="{{ post.image_set.all.0.images.url }}"  height="100%"
+                          width="100%" alt="tchad, vente de produits en ligne">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ post.name }}</h5>
+                        <h5 class="card-title">{{ post.price }} Francs</h5>
+                        <a href="{% url 'single_post' post.id %}" class="btn btn-primary">Detail</a>
+                      </div>
+                    </div>
+                </div>
+            {% endfor %}
+       </div>
+    </div>
+
+{% endblock %}

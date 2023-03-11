@@ -9,24 +9,30 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container mt-5">
     <div class="row">
+        <div class="col-md-2"></div>
         <div class="col-md-6 mt-5">
             <h3>Bonjour </h3>
             <p>Connectez-vous pour bénéficier nos produits</p>
             <form method="POST">
                 {% csrf_token %}
-                <p><input type="email" name="username" placeholder="Email" class="form-control" required></p>
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li {% if message.tags %}class="alert alert-danger"{% endif %}>
+                            {{ message }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <p><input type="text" name="username" placeholder="Email" class="form-control" required></p>
                 <p><input type="password" name="password" placeholder="Mot de passe" class="form-control" required></p>
                 <input type="submit" class="btn btn-primary">
                 <p>Vous n'avez pas de compte? Clikez <a href="compte">ici</a> </p>
                 <p>Vous avez oublié votre mot de passe, cliquez <a href="password_reset">ici</a></p>
             </form>
         </div>
-        <div class="col-md-4">
-            <div class="avatar mt-5 mr-5">
-            <img src="{% static 'images/avatar.jpg' %}">
-        </div>
-    </div>
+
 </div>
 {% endblock %}

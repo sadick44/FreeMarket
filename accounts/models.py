@@ -2,7 +2,8 @@ from django.db import models
 from accounts.constants.constants import *
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.conf import settings
-from django.utils import timezone
+
+from django.contrib.auth import get_user_model
 
 
 class UserManager(BaseUserManager):
@@ -54,7 +55,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = [] # needed later when wanna monetize it
 
     objects = UserManager()
 
@@ -75,20 +76,33 @@ class Post(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
     description = models.CharField(max_length=10000)
     category = models.CharField(choices=CATEGORIES, max_length=80, blank=True, null=True)
-   # image = models.ImageField(upload_to='files')
     type_immobilier = models.CharField(choices=TYPES_IMMOBILIER, max_length=50, blank=True, null=True)
     type_automobile = models.CharField(choices=TYPES_AUTOMOBILE, max_length=50, blank=True, null=True)
     area = models.CharField(max_length=60)
     city = models.CharField(max_length=60)
-    image = models.ImageField(upload_to="images/")
 
     def __str__(self):
         return self.name
+
+
+class Image(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    images = models.ImageField(upload_to="images/")
+
+    def __str__(self):
+        return self.post.name
 
 
 class PhoneNumber(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     phone_number = models.IntegerField(unique=True)
 
+
+class UserSearch(models.Model):
+    word_entered = models.CharField(max_length=100)
+    category = models.CharField(choices=CATEGORIES, max_length=80, blank=True, null=True)
+    search_date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+
     def __str__(self):
-        return self.phone_number
+        return self.word_entered

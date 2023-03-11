@@ -9,6 +9,8 @@
      <script src="{% static 'js/jquery.js' %}"></script>
      <script src="{% static 'js/bootstrap.js' %}"></script>
      <script src="{% static 'js/bootstrap.min.js' %}"></script>
+      <link rel="stylesheet" type='text/css' href="{% static 'css/home.css' %}">
+      {% block css_content %} {% endblock %}
   </head>
   <body>
   {% include 'navbar.html' %}

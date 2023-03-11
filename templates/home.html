@@ -6,57 +6,50 @@
 <link rel="stylesheet" type='text/css' href="{% static 'css/home.css' %}">
 <link rel="stylesheet" type='text/css' href="{% static 'css/global.css' %}">
 {% endblock %}
+
 {% block content %}
-<div class="home mx-5 px-5 mt-5">
+<div class="container mt-5">
     <div class="row">
-        <div class="col-md-12">
-            <form method="POST">
-                {% csrf_token %}
-                <p><input type="text" class="form-control mb-3 recherche" placeholder="Recherche">
-                    <input type="submit" class="btn btn-primary" value="Rechercher"></p>
-            </form>
+        <div class="mx-5 col-12 col-md-8 mt-5">
+            <h2>Plus de 100 annonces par jour sur Carrefour Hanana</h2>
+            <div class="shadow p-3 mb-5 bg-white rounded announcement">
+
+                <form method="POST" class="mt-5">
+                    {% csrf_token %}
+                    <input type="text" class="form-control mb-3" name="word"
+                           placeholder="Votre Recherche" required>
+
+                    <select name="category" id="category-select" class="form-control">
+                    <option value="">Choissisez votre categorie</option>
+                    <option value="Automobile">Automobile</option>
+                    <option value="Immobilier">Immobilier</option>
+                    <option value="Electronique">Electronique</option>
+                    <option value="Alimentation">Alimentation</option>
+                    <option value="Autre">Autre</option>
+                </select>
+
+                    <input type="submit" class="btn btn-primary mt-3" value="Rechercher">
+                </form>
+            </div>
+
         </div>
-        <div class="col-md-4 mt-5">
-            <h1 class=" mb-3 introduction">Achetez, Vendez les biens que vous desirez!
-                Nous avons tous en stock pour vous.</h1>
+        <div class="col-md-4 mt-5 mx-5">
+            <h3 class=" mb-3 introduction">Achetez, Vendez les biens que vous desirez!
+                Nous avons tous en stock pour vous.</h3>
             <p>Si vous avez à vendre ou si vous recherchiez de quoi acheter, vous êtes au bon endroit. </p>
 
             <div class="chat">
-                <a href="" class="btn btn-lg btn-success">Decouvrir</a>
-                <a href="compte" class="btn btn-lg btn-primary ml-4">Créer de compte</a>
+                <a href="create-post" class="btn btn-lg btn-success mb-2">Deposer votre annonce</a>
+                <a href="compte" class="btn btn-lg btn-primary mb-2">Créer de compte</a>
             </div>
         </div>
         <div class="col-md-4 mt-5">
-            <img src="{% static 'images/stock_1.jpg' %}" class="image_stocks"
+            <img src="{% static 'images/stock_1.jpg' %}" style="width:100%" class="image_stocks"
                  alt="vente en ligne voiture maison immobilier tchad">
         </div>
-        <div class="col-md-3">
-        </div>
+
     </div>
 
-    <div class="row">
-            <div class="col-md-3">
-                <h3>Top Categories</h3>
-                <div class="card" style="width: 18rem; background-color: #6cb6fe; color: #fff; border-radius: 10px">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Immobilier</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mt-5">
-                <div class="card" style="width: 18rem; background-color: #0ab194; color: #fff; border-radius: 10px">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Voitures</h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
-                            the card's content.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-        </div>
 </div>
+
 {% endblock %}
