@@ -156,8 +156,7 @@ def password_reset_request(request):
     context = {
         'password_reset_form': password_reset_form
     }
-    return render(request=request, context=context,
-                  template_name="registration/password_reset_form.html")
+    return render(request,  "registration/password_reset_form.html",  context)
 
 
 login_required(login_url="/connexion")

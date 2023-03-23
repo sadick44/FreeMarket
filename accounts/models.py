@@ -106,3 +106,13 @@ class UserSearch(models.Model):
 
     def __str__(self):
         return self.word_entered
+
+
+class AddToFavorite(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    current_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    added_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.post
+
