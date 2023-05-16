@@ -1,8 +1,8 @@
 # FreeMarket
 
 
-#pip install -r requirements.txt
+pip install -r requirements.txt
 
-#configure postgres in settings.py
+configure postgres in settings.py
 
-#python manage.py runserver
+python manage.py runserver
