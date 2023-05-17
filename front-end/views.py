@@ -80,13 +80,19 @@ def user_login(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
+        print(username, username.isnumeric)
 
-        if '@' not in username and not  username.isnumeric():
+        if '@' not in username and not username.isnumeric():
             messages.warning(request, "Entrez votre mail ou numero de téléphone")
-            phone = PhoneNumber.objects.filter(phone_number=username)
-            if phone:
-                user = PhoneNumber.objects.get(phone_number=username).user
-                username = user.email
+            return render(request, 'forms/login.html')
+
+        if  username.isnumeric():
+                phone = PhoneNumber.objects.filter(phone_number=username)
+                if phone.exists:
+                    user = PhoneNumber.objects.get(phone_number=username).user
+                    username = user.email
+                else:
+                    messages.warning(request, "Ce numero de téléphone n'existe pas")
         user = authenticate(request, email=username, password=password)
         #test = get_current_site(request)
 
@@ -190,8 +196,8 @@ def user_logout(request):
 # @login_required(login_url='/connexion')
 # def add_to_favorite(request, pk):
 #     post = getPostById(id=pk)
-#     user = getUserByEmail(email=request.user)
-#
+#     user = (email=request.user)
+#getUserByEmail
 #     if not FavoritePost.objects.filter(post=post).exists():
 #         add_favorite = FavoritePost.objects.create(post=post, user=user)
 #         add_favorite.save()
